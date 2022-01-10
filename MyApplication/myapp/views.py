@@ -1,4 +1,5 @@
 from django.forms import model_to_dict
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
@@ -18,10 +19,10 @@ class PersonView(APIView):
         return context
 
     def get(self, request):
-        person = Person.objects.filter(id=request.query_params.get('roll_number')).first()
-        # res['data'] = model_to_dict(person)
-        if person:
-            return Response(data={"code": status.HTTP_200_OK, "data": model_to_dict(person)}, status=status.HTTP_200_OK)
+        doctor = Doctor.objects.filter(id=request.query_params.get('doctor_id')).first()
+        if doctor:
+            timeSlots = list(doctor.timeslots_set.filter(status=False).values())
+            return JsonResponse(timeSlots, safe=False)
         else:
             return Response(data={"code": status.HTTP_404_NOT_FOUND, "data": "", "message": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -35,3 +36,4 @@ class PersonView(APIView):
             return Response(data=res, status=status.HTTP_200_OK)
 
         return Response(data=json.loads(response.data), status=status.HTTP_400_BAD_REQUEST)
+
