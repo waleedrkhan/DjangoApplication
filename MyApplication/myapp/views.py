@@ -20,12 +20,15 @@ class PersonView(APIView):
     def get(self, request):
         person = Person.objects.filter(id=request.query_params.get('roll_number')).first()
         # res['data'] = model_to_dict(person)
-        return Response(data=model_to_dict(person), status=status.HTTP_200_OK)
+        if person:
+            return Response(data={"code": status.HTTP_200_OK, "data": model_to_dict(person)}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={"code": status.HTTP_404_NOT_FOUND, "data": "", "message": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         serializer = PersonSerializer(data=request.data)
         response = serializer.is_valid(raise_exception=True)
-        if response.status_code == 200:
+        if response.status_code == status.HTTP_200_OK:
             person = serializer.save(creator=request.user)
             res = json.loads(response.data)
             res['data'] = model_to_dict(person)

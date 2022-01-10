@@ -13,16 +13,16 @@ class PersonSerializer(serializers.Serializer):
 
     def is_valid(self, raise_exception=True):
         if not self.initial_data.get('f_name'):
-            res = {"code": 400, "message": "Missing First Name"}
+            res = {"code": status.HTTP_400_BAD_REQUEST, "message": "Missing First Name"}
             return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
         if not self.initial_data.get('l_name'):
-            res = {"code": 400, "message": "Missing Last Name"}
+            res = {"code": status.HTTP_400_BAD_REQUEST, "message": "Missing Last Name"}
             return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
         if not self.initial_data.get('gender'):
-            res = {"code": 400, "message": "Missing Gender"}
+            res = {"code": status.HTTP_400_BAD_REQUEST, "message": "Missing Gender"}
             return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
 
-        res = {"code": 200, "message": "Person Added successfully"}
+        res = {"code": status.HTTP_200_OK, "message": "Person Added successfully"}
         return Response(data=json.dumps(res), status=status.HTTP_200_OK)
 
     def save(self, **kwargs):
