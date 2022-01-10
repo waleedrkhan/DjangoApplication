@@ -18,7 +18,7 @@ class PersonView(APIView):
         return context
 
     def get(self, request):
-        person = Person.objects.filter(f_name=request.query_params.get('roll_number'))
+        person = Person.objects.filter(id=request.query_params.get('roll_number')).first()
         # res['data'] = model_to_dict(person)
         return Response(data=model_to_dict(person), status=status.HTTP_200_OK)
 
